@@ -1,0 +1,10 @@
+yfinance
+pandas
+python-dotenv
+requests
+python-telegram-bot
+groq
+smartapi-python
+pyotp
+logzero
+websocket-client
