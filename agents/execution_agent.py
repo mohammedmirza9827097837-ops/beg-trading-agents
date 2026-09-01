@@ -6,14 +6,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def get_smart_session():
-    api_key = os.getenv("SMARTAPI_API_KEY")
-    client_id = os.getenv("SMARTAPI_CLIENT_ID")
-    password = os.getenv("SMARTAPI_PASSWORD")
-    totp_secret = os.getenv("SMARTAPI_TOTP_SECRET")
+        api_key = os.getenv("SMARTAPI_API_KEY", "").strip()
+    client_id = os.getenv("SMARTAPI_CLIENT_ID", "").strip()
+    password = os.getenv("SMARTAPI_PASSWORD", "").strip()
+    totp_secret = os.getenv("SMARTAPI_TOTP_SECRET", "").strip()
 
     smart_api = SmartConnect(api_key)
-    print("DEBUG length:", len(totp_secret))
-    print("DEBUG repr:", repr(totp_secret))
     totp = pyotp.TOTP(totp_secret).now()
     session = smart_api.generateSession(client_id, password, totp)
 
