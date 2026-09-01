@@ -1,0 +1,7 @@
+.env
+beg_agents/
+__pycache__/
+agents/__pycache__/
+agents/scrip_master.json
+agents/logs/
+*.txt
