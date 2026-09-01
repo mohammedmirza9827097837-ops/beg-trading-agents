@@ -12,6 +12,8 @@ def get_smart_session():
     totp_secret = os.getenv("SMARTAPI_TOTP_SECRET")
 
     smart_api = SmartConnect(api_key)
+    print("DEBUG length:", len(totp_secret))
+    print("DEBUG repr:", repr(totp_secret))
     totp = pyotp.TOTP(totp_secret).now()
     session = smart_api.generateSession(client_id, password, totp)
 
