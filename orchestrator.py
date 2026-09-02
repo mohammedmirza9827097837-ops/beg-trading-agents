@@ -1,4 +1,3 @@
-cat > orchestrator.py << 'EOF'
 import sys
 import time
 sys.path.append("agents")
@@ -63,19 +62,19 @@ def run_pipeline():
 
     smart_api = get_smart_session()
 
+    executed_count = 0
+    for stock in STOCKS:
+        try:
+            if run_for_stock(stock, vix, smart_api):
+                executed_count += 1
+        except Exception as e:
+            print(f"Error with {stock['symbol']}: {e}")
         time.sleep(2)
 
+    print("\nAll stocks processed!")
+
+    notify(f"BEG Bot run complete. {len(STOCKS)} stocks scanned, "
            f"{executed_count} EXECUTE signal(s), VIX: {vix}")
 
 if __name__ == "__main__":
     run_pipeline()
-EOF    print("\nAll stocks processed!")
-
-    notify(f"BEG Bot run complete. {len(STOCKS)} stocks scanned, "
-    executed_count = 0
-    for stock in STOCKS:
-            print(f"Error with {stock['symbol']}: {e}")
-        try:
-            if run_for_stock(stock, vix, smart_api):
-        except Exception as e:
-
