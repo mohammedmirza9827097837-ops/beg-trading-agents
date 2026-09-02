@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def get_smart_session():
-        api_key = os.getenv("SMARTAPI_API_KEY", "").strip()
+    api_key = os.getenv("SMARTAPI_API_KEY", "").strip()
     client_id = os.getenv("SMARTAPI_CLIENT_ID", "").strip()
     password = os.getenv("SMARTAPI_PASSWORD", "").strip()
     totp_secret = os.getenv("SMARTAPI_TOTP_SECRET", "").strip()
