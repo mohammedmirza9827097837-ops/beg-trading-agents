@@ -1,14 +1,20 @@
 import os
+import sys
 import json
 import datetime
 import pandas as pd
 import yfinance as yf
+import mplfinance as mpf
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+from notifier_agent import notify_with_photo
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATE_FILE = os.path.join(BASE_DIR, "nifty_trade_state.json")
+CHART_FILE = os.path.join(BASE_DIR, "nifty_chart.png")
 
-TARGET_POINTS = 12    # 10-15 range ka beech
-SL_POINTS = 4.5        # 4-5 range ka beech
+TARGET_POINTS = 12
+SL_POINTS = 4.5
 START_TIME = datetime.time(9, 15)
 END_TIME = datetime.time(12, 0)
 
@@ -31,6 +37,39 @@ def in_trading_window():
 
 def calculate_ema(series, period):
     return series.ewm(span=period, adjust=False).mean()
+
+def make_chart(df, ema9, ema21, signal, entry, target, sl):
+    plot_df = df.tail(60).copy()
+    plot_df.columns = [c[0] if isinstance(c, tuple) else c for c in plot_df.columns]
+
+    ema9_plot = ema9.tail(60)
+    ema21_plot = ema21.tail(60)
+
+    addplots = [
+        mpf.make_addplot(ema9_plot, color="blue", width=1),
+        mpf.make_addplot(ema21_plot, color="orange", width=1),
+    ]
+
+    hlines = dict(
+        hlines=[entry, target, sl],
+        colors=["green", "lime", "red"],
+        linestyle="--",
+        linewidths=1
+    )
+
+    mc = mpf.make_marketcolors(up="green", down="red", inherit=True)
+    style = mpf.make_mpf_style(marketcolors=mc, gridstyle="--")
+
+    mpf.plot(
+        plot_df,
+        type="candle",
+        style=style,
+        addplot=addplots,
+        hlines=hlines,
+        title="NIFTY Scalper Signal",
+        ylabel="Price",
+        savefig=dict(fname=CHART_FILE, dpi=120, bbox_inches="tight")
+    )
 
 def get_nifty_signal():
     df = yf.download("^NSEI", period="2d", interval="5m", progress=False)
@@ -66,9 +105,9 @@ def get_nifty_signal():
     return {
         "signal": signal,
         "close": round(latest_close, 2),
-        "ema9": round(latest_ema9, 2),
-        "ema21": round(latest_ema21, 2),
-        "volume_confirmed": volume_confirmed
+        "df": df,
+        "ema9_series": ema9,
+        "ema21_series": ema21
     }
 
 def run_nifty_scalper():
@@ -81,7 +120,7 @@ def run_nifty_scalper():
         return None
 
     data = get_nifty_signal()
-    print("Nifty data:", data)
+    print("Nifty data:", {"signal": data["signal"], "close": data["close"]})
 
     if data["signal"] == "NONE":
         print("No clear EMA crossover signal right now.")
@@ -95,12 +134,22 @@ def run_nifty_scalper():
         target = round(entry - TARGET_POINTS, 2)
         sl = round(entry + SL_POINTS, 2)
 
+    make_chart(data["df"], data["ema9_series"], data["ema21_series"],
+               data["signal"], entry, target, sl)
+
     result = {
         "signal": data["signal"],
         "entry": entry,
         "target": target,
         "stop_loss": sl
     }
+
+    msg = "NIFTY SIGNAL: " + result["signal"] + "\n"
+    msg += "Entry: " + str(result["entry"]) + "\n"
+    msg += "Target: " + str(result["target"]) + "\n"
+    msg += "Stop Loss: " + str(result["stop_loss"]) + "\n"
+    msg += "(Manual execution needed for options)"
+    notify_with_photo(msg, CHART_FILE)
 
     mark_traded_today(result)
     return result
