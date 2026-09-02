@@ -8,6 +8,7 @@ from risk_agent import risk_check
 from decision_agent import get_final_decision
 from execution_agent import get_smart_session, place_order
 from notifier_agent import notify
+from nifty_scalper import run_nifty_scalper
 
 CAPITAL = 100000
 
@@ -55,10 +56,24 @@ def run_for_stock(stock, vix, smart_api):
 
     return executed
 
+def run_nifty():
+    print("\n===== NIFTY SCALPER =====")
+    result = run_nifty_scalper()
+    if result:
+        msg = (f"NIFTY SIGNAL: {result['signal']}\n"
+               f"Entry: {result['entry']}\n"
+               f"Target: {result['target']}\n"
+               f"Stop Loss: {result['stop_loss']}\n"
+               f"(Manual execution needed for options)")
+        print(msg)
+        notify(msg)
+
 def run_pipeline():
     print("Fetching India VIX (ek baar sabke liye)...")
     vix = fetch_india_vix()
     print("VIX:", vix)
+
+    run_nifty()
 
     smart_api = get_smart_session()
 
