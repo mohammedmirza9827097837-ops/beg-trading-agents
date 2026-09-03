@@ -6,130 +6,173 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-  * { box-sizing: border-box; }
+  * { box-sizing: border-box; image-rendering: pixelated; }
   body {
     margin: 0;
     font-family: 'Press Start 2P', monospace;
-    background: #2b2b3d;
+    background: #1a1a2e;
     color: #fff;
-    padding: 20px;
+    padding: 16px;
   }
   h1 {
     text-align: center;
     font-size: 16px;
     color: #ffd700;
     text-shadow: 2px 2px #000;
+    margin-bottom: 4px;
   }
   #updated {
     text-align: center;
     font-size: 9px;
     color: #aaa;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
   }
-  .office {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 16px;
+
+  .office-frame {
     max-width: 1000px;
     margin: 0 auto;
+    border: 6px solid #4a2f1a;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 8px 0 #000, inset 0 0 0 4px #6b4423;
   }
-  .desk {
-    background: #8b5a2b;
-    border: 4px solid #5c3a1a;
-    border-radius: 8px;
-    padding: 16px;
+
+  .rooms {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  @media (max-width: 700px) {
+    .rooms { grid-template-columns: 1fr; }
+  }
+
+  .room {
     position: relative;
-    box-shadow: 0 4px 0 #000;
+    padding: 20px 16px 30px;
+    min-height: 260px;
+  }
+  .room-workfloor {
+    background:
+      repeating-linear-gradient(90deg, #a97c50 0 40px, #96693f 40px 80px);
+    border-right: 4px solid #4a2f1a;
+  }
+  .room-signal {
+    background:
+      repeating-linear-gradient(90deg, #2c3e6b 0 40px, #26355c 40px 80px);
+  }
+
+  .room-label {
+    position: absolute;
+    top: 8px;
+    left: 10px;
+    font-size: 8px;
+    background: rgba(0,0,0,0.5);
+    padding: 4px 6px;
+    border-radius: 4px;
+    color: #ffd700;
+  }
+
+  .furniture-row {
+    display: flex;
+    justify-content: space-around;
+    font-size: 22px;
+    margin-bottom: 10px;
+    opacity: 0.85;
+  }
+
+  .desks-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .desk {
+    background: #5c3a1a;
+    border: 3px solid #3a2410;
+    border-radius: 6px;
+    padding: 8px 6px;
+    text-align: center;
+    box-shadow: 0 3px 0 #241505;
   }
   .avatar {
-    font-size: 36px;
-    text-align: center;
+    font-size: 28px;
     display: block;
-    animation: bob 1.5s infinite ease-in-out;
+    animation: bob 1.4s infinite ease-in-out;
   }
   @keyframes bob {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-4px); }
+    50% { transform: translateY(-3px); }
   }
-  .avatar.idle {
-    animation: none;
-    opacity: 0.5;
-  }
+  .avatar.idle { animation: none; opacity: 0.45; filter: grayscale(60%); }
+
   .agent-name {
-    font-size: 10px;
-    text-align: center;
-    margin: 10px 0 6px;
-    color: #fff;
-  }
-  .agent-desc {
     font-size: 7px;
-    text-align: center;
+    margin: 6px 0 3px;
     color: #ffe9b0;
-    margin-bottom: 8px;
-    line-height: 1.4;
   }
   .status-badge {
-    display: block;
+    display: inline-block;
+    font-size: 6px;
+    padding: 3px 5px;
+    border-radius: 3px;
+    margin-top: 3px;
+  }
+  .status-working { background: #2ecc71; color: #003300; }
+  .status-idle { background: #555; color: #ccc; }
+  .status-alert { background: #f1c40f; color: #3d2b00; animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+  .signal-room-inner {
     text-align: center;
-    font-size: 7px;
-    padding: 4px;
-    border-radius: 4px;
-    margin-top: 6px;
+    margin-top: 24px;
   }
-  .status-working {
-    background: #2ecc71;
-    color: #003300;
-  }
-  .status-idle {
-    background: #555;
-    color: #ccc;
-  }
-  .status-alert {
-    background: #f1c40f;
-    color: #3d2b00;
-  }
-  .signal-board {
-    max-width: 700px;
-    margin: 24px auto;
-    background: #1c1c2b;
-    border: 4px solid #ffd700;
-    border-radius: 8px;
-    padding: 16px;
-    text-align: center;
-  }
-  .signal-board h2 {
-    font-size: 12px;
-    color: #ffd700;
-    margin-top: 0;
+  .desk-table {
+    background: #3b2c1e;
+    border: 4px solid #241a10;
+    width: 140px;
+    height: 60px;
+    margin: 0 auto 10px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    box-shadow: 0 4px 0 #150e08;
   }
   .signal-text {
-    font-size: 14px;
+    font-size: 13px;
     margin: 10px 0;
   }
-  .buy-call { color: #2ecc71; }
-  .buy-put { color: #e74c3c; }
+  .buy-call { color: #2ecc71; text-shadow: 0 0 8px #2ecc71; }
+  .buy-put { color: #e74c3c; text-shadow: 0 0 8px #e74c3c; }
   .none-signal { color: #aaa; }
+
   .metrics {
     display: flex;
-    justify-content: space-around;
-    font-size: 8px;
-    margin-top: 12px;
+    justify-content: center;
+    gap: 20px;
+    font-size: 7px;
+    margin-top: 10px;
   }
+  .metrics div { background: rgba(0,0,0,0.4); padding: 6px 8px; border-radius: 4px; }
+
   .chart-wrap {
     text-align: center;
-    margin: 20px auto;
-    max-width: 700px;
+    padding: 16px;
+    background: #12121f;
   }
   .chart-wrap img {
     width: 100%;
+    max-width: 700px;
     border: 4px solid #ffd700;
     border-radius: 8px;
   }
+
   footer {
     text-align: center;
     font-size: 7px;
     color: #777;
-    margin-top: 30px;
+    margin-top: 20px;
   }
 </style>
 </head>
@@ -138,26 +181,37 @@
 <h1>BEG TRADING AGENTS OFFICE</h1>
 <div id="updated">Loading...</div>
 
-<div class="office" id="office"></div>
-
-<div class="signal-board" id="signalBoard">
-  <h2>NIFTY SIGNAL BOARD</h2>
-  <div class="signal-text none-signal" id="signalText">Loading...</div>
-  <div class="metrics" id="metricsBox"></div>
+<div class="office-frame">
+  <div class="rooms">
+    <div class="room room-workfloor">
+      <div class="room-label">MAIN OFFICE</div>
+      <div class="furniture-row">📚 🪴 📚 🖨️ 🪴</div>
+      <div class="desks-grid" id="office"></div>
+    </div>
+    <div class="room room-signal">
+      <div class="room-label">SIGNAL ROOM</div>
+      <div class="furniture-row">🕐 🖼️ 🪴 💧 📊</div>
+      <div class="signal-room-inner">
+        <div class="desk-table">📈</div>
+        <h2 style="font-size:10px;color:#ffd700;">NIFTY SIGNAL BOARD</h2>
+        <div class="signal-text none-signal" id="signalText">Loading...</div>
+        <div class="metrics" id="metricsBox"></div>
+      </div>
+    </div>
+  </div>
+  <div class="chart-wrap" id="chartWrap"></div>
 </div>
-
-<div class="chart-wrap" id="chartWrap"></div>
 
 <footer>Auto-refreshes every 30s. Powered by BEG Agriculture Vision Trading Stack.</footer>
 
 <script>
 const AGENTS = [
-  { key: "data", name: "DATA AGENT", desc: "Fetches live Nifty price", avatar: "🧑‍💻" },
-  { key: "analysis", name: "ANALYSIS AGENT", desc: "EMA5/EMA13 + volume", avatar: "🧑‍🔬" },
-  { key: "signal", name: "SIGNAL AGENT", desc: "Decides CALL / PUT / wait", avatar: "🧑‍✈️" },
-  { key: "chart", name: "CHART AGENT", desc: "Draws candlestick chart", avatar: "🧑‍🎨" },
-  { key: "notifier", name: "NOTIFIER AGENT", desc: "Sends Telegram alerts", avatar: "🧑‍💼" },
-  { key: "news", name: "NEWS AGENT", desc: "Market headlines", avatar: "🧑‍📰" }
+  { key: "data", name: "DATA AGENT", avatar: "🧑‍💻" },
+  { key: "analysis", name: "ANALYSIS AGENT", avatar: "🧑‍🔬" },
+  { key: "signal", name: "SIGNAL AGENT", avatar: "🧑‍✈️" },
+  { key: "chart", name: "CHART AGENT", avatar: "🧑‍🎨" },
+  { key: "notifier", name: "NOTIFIER AGENT", avatar: "🧑‍💼" },
+  { key: "news", name: "NEWS AGENT", avatar: "🧑‍📰" }
 ];
 
 async function loadStatus() {
@@ -186,25 +240,23 @@ function render(status) {
 
     if (agent.key === "signal") {
       working = agentState === "signal_sent";
-      badgeText = working ? "SIGNAL: " + signal : "WATCHING...";
+      badgeText = working ? signal : "WATCHING";
       badgeClass = working ? "status-alert" : "status-working";
     }
     if (agent.key === "chart") {
       working = agentState === "signal_sent";
-      badgeText = working ? "CHART READY" : "STANDBY";
+      badgeText = working ? "READY" : "STANDBY";
       badgeClass = working ? "status-working" : "status-idle";
     }
     if (agent.key === "notifier") {
       working = agentState === "signal_sent";
-      badgeText = working ? "ALERT SENT" : "IDLE";
+      badgeText = working ? "SENT" : "IDLE";
       badgeClass = working ? "status-working" : "status-idle";
     }
-    if (agentState === "outside_window") {
+    if (agentState === "outside_window" && agent.key !== "news") {
       working = false;
-      if (agent.key !== "news") {
-        badgeText = "OFF HOURS";
-        badgeClass = "status-idle";
-      }
+      badgeText = "OFF HOURS";
+      badgeClass = "status-idle";
     }
 
     const desk = document.createElement('div');
@@ -212,7 +264,6 @@ function render(status) {
     desk.innerHTML = `
       <span class="avatar ${working ? '' : 'idle'}">${agent.avatar}</span>
       <div class="agent-name">${agent.name}</div>
-      <div class="agent-desc">${agent.desc}</div>
       <div class="status-badge ${badgeClass}">${badgeText}</div>
     `;
     officeEl.appendChild(desk);
@@ -229,15 +280,15 @@ function render(status) {
       <div>SL<br>${status.stop_loss}</div>
     `;
   } else if (agentState === "outside_window") {
-    signalTextEl.innerText = "OUTSIDE TRADING WINDOW";
+    signalTextEl.innerText = "OUTSIDE WINDOW";
     signalTextEl.className = "signal-text none-signal";
     metricsBox.innerHTML = "";
   } else if (agentState === "already_traded") {
-    signalTextEl.innerText = "ALREADY TRADED TODAY";
+    signalTextEl.innerText = "TRADED TODAY";
     signalTextEl.className = "signal-text none-signal";
     metricsBox.innerHTML = "";
   } else {
-    signalTextEl.innerText = "WATCHING (Nifty: " + (status.nifty_close || "-") + ")";
+    signalTextEl.innerText = "WATCHING (" + (status.nifty_close || "-") + ")";
     signalTextEl.className = "signal-text none-signal";
     metricsBox.innerHTML = "";
   }
