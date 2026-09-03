@@ -85,8 +85,8 @@ def get_nifty_signal():
     if hasattr(volume, "columns"):
         volume = volume.iloc[:, 0]
 
-    ema9 = calculate_ema(close, 9)
-    ema21 = calculate_ema(close, 21)
+    ema9 = calculate_ema(close, 5)
+    ema21 = calculate_ema(close, 13)
     avg_volume = volume.rolling(window=20).mean()
 
     latest_close = float(close.iloc[-1])
@@ -97,7 +97,7 @@ def get_nifty_signal():
     latest_volume = float(volume.iloc[-1])
     latest_avg_volume = float(avg_volume.iloc[-1])
 
-    volume_confirmed = latest_volume > latest_avg_volume
+    volume_confirmed = latest_volume > (latest_avg_volume * 0.8)
 
     signal = "NONE"
     if prev_ema9 <= prev_ema21 and latest_ema9 > latest_ema21 and volume_confirmed:
