@@ -13,8 +13,10 @@ from notifier_agent import notify_with_photo
 IST = ZoneInfo("Asia/Kolkata")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.dirname(BASE_DIR)
 STATE_FILE = os.path.join(BASE_DIR, "nifty_trade_state.json")
-CHART_FILE = os.path.join(BASE_DIR, "nifty_chart.png")
+CHART_FILE = os.path.join(REPO_ROOT, "dashboard_chart.png")
+STATUS_FILE = os.path.join(REPO_ROOT, "status.json")
 
 TARGET_POINTS = 12
 SL_POINTS = 4.5
@@ -74,6 +76,11 @@ def make_chart(df, ema9, ema21, signal, entry, target, sl):
         savefig=dict(fname=CHART_FILE, dpi=120, bbox_inches="tight")
     )
 
+def write_status(status_dict):
+    status_dict["updated_at"] = datetime.datetime.now(IST).strftime("%Y-%m-%d %H:%M:%S IST")
+    with open(STATUS_FILE, "w") as f:
+        json.dump(status_dict, f, indent=2)
+
 def get_nifty_signal():
     df = yf.download("^NSEI", period="2d", interval="5m", progress=False)
     df.dropna(inplace=True)
@@ -108,6 +115,8 @@ def get_nifty_signal():
     return {
         "signal": signal,
         "close": round(latest_close, 2),
+        "ema9": round(latest_ema9, 2),
+        "ema21": round(latest_ema21, 2),
         "df": df,
         "ema9_series": ema9,
         "ema21_series": ema21
@@ -116,16 +125,34 @@ def get_nifty_signal():
 def run_nifty_scalper():
     if not in_trading_window():
         print("Outside trading window (9:15 AM - 12:00 PM IST). Skipping.")
+        write_status({
+            "agent_status": "outside_window",
+            "signal": "NONE",
+            "message": "Outside trading window"
+        })
         return None
 
     if already_traded_today():
         print("Already traded today. One trade per day limit reached.")
+        write_status({
+            "agent_status": "already_traded",
+            "signal": "NONE",
+            "message": "Already traded today"
+        })
         return None
 
     data = get_nifty_signal()
     print("Nifty data:", {"signal": data["signal"], "close": data["close"]})
 
     if data["signal"] == "NONE":
+        write_status({
+            "agent_status": "active_no_signal",
+            "signal": "NONE",
+            "nifty_close": data["close"],
+            "ema_fast": data["ema9"],
+            "ema_slow": data["ema21"],
+            "message": "No crossover signal right now"
+        })
         print("No clear EMA crossover signal right now.")
         return None
 
@@ -153,6 +180,14 @@ def run_nifty_scalper():
     msg += "Stop Loss: " + str(result["stop_loss"]) + "\n"
     msg += "(Manual execution needed for options)"
     notify_with_photo(msg, CHART_FILE)
+
+    write_status({
+        "agent_status": "signal_sent",
+        "signal": result["signal"],
+        "entry": result["entry"],
+        "target": result["target"],
+        "stop_loss": result["stop_loss"]
+    })
 
     mark_traded_today(result)
     return result
