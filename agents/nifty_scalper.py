@@ -2,12 +2,15 @@ import os
 import sys
 import json
 import datetime
+from zoneinfo import ZoneInfo
 import pandas as pd
 import yfinance as yf
 import mplfinance as mpf
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from notifier_agent import notify_with_photo
+
+IST = ZoneInfo("Asia/Kolkata")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATE_FILE = os.path.join(BASE_DIR, "nifty_trade_state.json")
@@ -23,16 +26,16 @@ def already_traded_today():
         return False
     with open(STATE_FILE, "r") as f:
         state = json.load(f)
-    today = datetime.date.today().isoformat()
+    today = datetime.datetime.now(IST).date().isoformat()
     return state.get("last_trade_date") == today
 
 def mark_traded_today(details):
-    today = datetime.date.today().isoformat()
+    today = datetime.datetime.now(IST).date().isoformat()
     with open(STATE_FILE, "w") as f:
         json.dump({"last_trade_date": today, "details": details}, f)
 
 def in_trading_window():
-    now = datetime.datetime.now().time()
+    now = datetime.datetime.now(IST).time()
     return START_TIME <= now <= END_TIME
 
 def calculate_ema(series, period):
@@ -112,7 +115,7 @@ def get_nifty_signal():
 
 def run_nifty_scalper():
     if not in_trading_window():
-        print("Outside trading window (9:15 AM - 12:00 PM). Skipping.")
+        print("Outside trading window (9:15 AM - 12:00 PM IST). Skipping.")
         return None
 
     if already_traded_today():
