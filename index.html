@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>BEG Trading Agents - Office</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Press Start 2P', monospace;
+    background: #2b2b3d;
+    color: #fff;
+    padding: 20px;
+  }
+  h1 {
+    text-align: center;
+    font-size: 16px;
+    color: #ffd700;
+    text-shadow: 2px 2px #000;
+  }
+  #updated {
+    text-align: center;
+    font-size: 9px;
+    color: #aaa;
+    margin-bottom: 20px;
+  }
+  .office {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .desk {
+    background: #8b5a2b;
+    border: 4px solid #5c3a1a;
+    border-radius: 8px;
+    padding: 16px;
+    position: relative;
+    box-shadow: 0 4px 0 #000;
+  }
+  .avatar {
+    font-size: 36px;
+    text-align: center;
+    display: block;
+    animation: bob 1.5s infinite ease-in-out;
+  }
+  @keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+  .avatar.idle {
+    animation: none;
+    opacity: 0.5;
+  }
+  .agent-name {
+    font-size: 10px;
+    text-align: center;
+    margin: 10px 0 6px;
+    color: #fff;
+  }
+  .agent-desc {
+    font-size: 7px;
+    text-align: center;
+    color: #ffe9b0;
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+  .status-badge {
+    display: block;
+    text-align: center;
+    font-size: 7px;
+    padding: 4px;
+    border-radius: 4px;
+    margin-top: 6px;
+  }
+  .status-working {
+    background: #2ecc71;
+    color: #003300;
+  }
+  .status-idle {
+    background: #555;
+    color: #ccc;
+  }
+  .status-alert {
+    background: #f1c40f;
+    color: #3d2b00;
+  }
+  .signal-board {
+    max-width: 700px;
+    margin: 24px auto;
+    background: #1c1c2b;
+    border: 4px solid #ffd700;
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+  }
+  .signal-board h2 {
+    font-size: 12px;
+    color: #ffd700;
+    margin-top: 0;
+  }
+  .signal-text {
+    font-size: 14px;
+    margin: 10px 0;
+  }
+  .buy-call { color: #2ecc71; }
+  .buy-put { color: #e74c3c; }
+  .none-signal { color: #aaa; }
+  .metrics {
+    display: flex;
+    justify-content: space-around;
+    font-size: 8px;
+    margin-top: 12px;
+  }
+  .chart-wrap {
+    text-align: center;
+    margin: 20px auto;
+    max-width: 700px;
+  }
+  .chart-wrap img {
+    width: 100%;
+    border: 4px solid #ffd700;
+    border-radius: 8px;
+  }
+  footer {
+    text-align: center;
+    font-size: 7px;
+    color: #777;
+    margin-top: 30px;
+  }
+</style>
+</head>
+<body>
+
+<h1>BEG TRADING AGENTS OFFICE</h1>
+<div id="updated">Loading...</div>
+
+<div class="office" id="office"></div>
+
+<div class="signal-board" id="signalBoard">
+  <h2>NIFTY SIGNAL BOARD</h2>
+  <div class="signal-text none-signal" id="signalText">Loading...</div>
+  <div class="metrics" id="metricsBox"></div>
+</div>
+
+<div class="chart-wrap" id="chartWrap"></div>
+
+<footer>Auto-refreshes every 30s. Powered by BEG Agriculture Vision Trading Stack.</footer>
+
+<script>
+const AGENTS = [
+  { key: "data", name: "DATA AGENT", desc: "Fetches live Nifty price", avatar: "🧑‍💻" },
+  { key: "analysis", name: "ANALYSIS AGENT", desc: "EMA5/EMA13 + volume", avatar: "🧑‍🔬" },
+  { key: "signal", name: "SIGNAL AGENT", desc: "Decides CALL / PUT / wait", avatar: "🧑‍✈️" },
+  { key: "chart", name: "CHART AGENT", desc: "Draws candlestick chart", avatar: "🧑‍🎨" },
+  { key: "notifier", name: "NOTIFIER AGENT", desc: "Sends Telegram alerts", avatar: "🧑‍💼" },
+  { key: "news", name: "NEWS AGENT", desc: "Market headlines", avatar: "🧑‍📰" }
+];
+
+async function loadStatus() {
+  try {
+    const res = await fetch('status.json?t=' + Date.now());
+    const status = await res.json();
+    render(status);
+  } catch (e) {
+    document.getElementById('updated').innerText = "Waiting for first data...";
+  }
+}
+
+function render(status) {
+  document.getElementById('updated').innerText = "Last updated: " + (status.updated_at || "Unknown");
+
+  const agentState = status.agent_status || "unknown";
+  const signal = status.signal || "NONE";
+
+  const officeEl = document.getElementById('office');
+  officeEl.innerHTML = "";
+
+  AGENTS.forEach(agent => {
+    let working = true;
+    let badgeClass = "status-working";
+    let badgeText = "WORKING";
+
+    if (agent.key === "signal") {
+      working = agentState === "signal_sent";
+      badgeText = working ? "SIGNAL: " + signal : "WATCHING...";
+      badgeClass = working ? "status-alert" : "status-working";
+    }
+    if (agent.key === "chart") {
+      working = agentState === "signal_sent";
+      badgeText = working ? "CHART READY" : "STANDBY";
+      badgeClass = working ? "status-working" : "status-idle";
+    }
+    if (agent.key === "notifier") {
+      working = agentState === "signal_sent";
+      badgeText = working ? "ALERT SENT" : "IDLE";
+      badgeClass = working ? "status-working" : "status-idle";
+    }
+    if (agentState === "outside_window") {
+      working = false;
+      if (agent.key !== "news") {
+        badgeText = "OFF HOURS";
+        badgeClass = "status-idle";
+      }
+    }
+
+    const desk = document.createElement('div');
+    desk.className = "desk";
+    desk.innerHTML = `
+      <span class="avatar ${working ? '' : 'idle'}">${agent.avatar}</span>
+      <div class="agent-name">${agent.name}</div>
+      <div class="agent-desc">${agent.desc}</div>
+      <div class="status-badge ${badgeClass}">${badgeText}</div>
+    `;
+    officeEl.appendChild(desk);
+  });
+
+  const signalTextEl = document.getElementById('signalText');
+  const metricsBox = document.getElementById('metricsBox');
+  if (agentState === "signal_sent") {
+    signalTextEl.innerText = signal;
+    signalTextEl.className = "signal-text " + (signal === "BUY CALL" ? "buy-call" : "buy-put");
+    metricsBox.innerHTML = `
+      <div>ENTRY<br>${status.entry}</div>
+      <div>TARGET<br>${status.target}</div>
+      <div>SL<br>${status.stop_loss}</div>
+    `;
+  } else if (agentState === "outside_window") {
+    signalTextEl.innerText = "OUTSIDE TRADING WINDOW";
+    signalTextEl.className = "signal-text none-signal";
+    metricsBox.innerHTML = "";
+  } else if (agentState === "already_traded") {
+    signalTextEl.innerText = "ALREADY TRADED TODAY";
+    signalTextEl.className = "signal-text none-signal";
+    metricsBox.innerHTML = "";
+  } else {
+    signalTextEl.innerText = "WATCHING (Nifty: " + (status.nifty_close || "-") + ")";
+    signalTextEl.className = "signal-text none-signal";
+    metricsBox.innerHTML = "";
+  }
+
+  const chartWrap = document.getElementById('chartWrap');
+  if (agentState === "signal_sent") {
+    chartWrap.innerHTML = '<img src="dashboard_chart.png?t=' + Date.now() + '" alt="chart">';
+  } else {
+    chartWrap.innerHTML = "";
+  }
+}
+
+loadStatus();
+setInterval(loadStatus, 30000);
+</script>
+
+</body>
+</html>
