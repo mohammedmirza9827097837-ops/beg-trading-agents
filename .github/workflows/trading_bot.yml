@@ -31,6 +31,7 @@ jobs:
         run: |
           git config user.name "BEG Trading Bot"
           git config user.email "bot@beg-trading.local"
-          git add status.json dashboard_chart.png
+                    git add status.json
+          [ -f dashboard_chart.png ] && git add dashboard_chart.png || true
           git diff --staged --quiet || git commit -m "Update dashboard data [skip ci]"
           git push
