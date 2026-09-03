@@ -40,12 +40,12 @@
   .pipeline {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
     gap: 4px;
     background:
       repeating-linear-gradient(90deg, #a97c50 0 40px, #96693f 40px 80px);
-    padding: 24px 12px 34px;
+    padding: 30px 12px 20px;
     position: relative;
   }
   .room-label {
@@ -63,16 +63,16 @@
     background: #5c3a1a;
     border: 3px solid #3a2410;
     border-radius: 6px;
-    padding: 10px 8px 8px;
+    padding: 30px 8px 8px;
     text-align: center;
     box-shadow: 0 3px 0 #241505;
-    width: 110px;
+    width: 100px;
     position: relative;
-    min-height: 110px;
+    min-height: 130px;
   }
   .speech {
     position: absolute;
-    top: -22px;
+    top: -20px;
     left: 50%;
     transform: translateX(-50%);
     background: #fff;
@@ -82,6 +82,7 @@
     border-radius: 4px;
     white-space: nowrap;
     box-shadow: 0 2px 0 #000;
+    z-index: 3;
   }
   .speech::after {
     content: "";
@@ -95,31 +96,35 @@
   }
 
   .avatar-wrap {
-    height: 34px;
-    position: relative;
+    height: 64px;
+    position: absolute;
+    top: 30px;
+    left: 0;
+    right: 0;
     overflow: visible;
   }
-  .avatar {
-    font-size: 28px;
-    display: inline-block;
+  .avatar-img {
+    height: 64px;
     position: relative;
+    display: inline-block;
     animation: walk 2.2s infinite ease-in-out;
+    filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.4));
   }
   @keyframes walk {
-    0%   { transform: translateX(-10px) scaleX(1); }
-    45%  { transform: translateX(10px) scaleX(1); }
-    50%  { transform: translateX(10px) scaleX(-1); }
-    95%  { transform: translateX(-10px) scaleX(-1); }
-    100% { transform: translateX(-10px) scaleX(1); }
+    0%   { transform: translateX(-14px) scaleX(1); }
+    45%  { transform: translateX(14px) scaleX(1); }
+    50%  { transform: translateX(14px) scaleX(-1); }
+    95%  { transform: translateX(-14px) scaleX(-1); }
+    100% { transform: translateX(-14px) scaleX(1); }
   }
-  .avatar.idle {
+  .avatar-img.idle {
     animation: none;
-    opacity: 0.45;
-    filter: grayscale(60%);
+    opacity: 0.4;
+    filter: grayscale(80%);
   }
 
   .agent-name {
-    font-size: 7px;
+    font-size: 6px;
     margin: 6px 0 3px;
     color: #ffe9b0;
   }
@@ -136,9 +141,11 @@
   @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
 
   .arrow {
-    font-size: 20px;
+    font-size: 18px;
     color: #ffd700;
     animation: arrowpulse 1.2s infinite;
+    align-self: center;
+    margin-bottom: 40px;
   }
   .arrow.dim { color: #555; animation: none; }
   @keyframes arrowpulse {
@@ -227,12 +234,12 @@
 
 <script>
 const AGENTS = [
-  { key: "data", name: "DATA AGENT", avatar: "🧑‍💻", action: "FETCHING PRICE" },
-  { key: "analysis", name: "ANALYSIS AGENT", avatar: "🧑‍🔬", action: "CHECKING EMA" },
-  { key: "signal", name: "SIGNAL AGENT", avatar: "🧑‍✈️", action: "DECIDING" },
-  { key: "chart", name: "CHART AGENT", avatar: "🧑‍🎨", action: "DRAWING CHART" },
-  { key: "notifier", name: "NOTIFIER AGENT", avatar: "🧑‍💼", action: "SENDING ALERT" },
-  { key: "news", name: "NEWS AGENT", avatar: "🧑‍📰", action: "FETCHING NEWS" }
+  { key: "data", name: "DATA AGENT", img: "assets/data_agent.png", action: "FETCHING PRICE" },
+  { key: "analysis", name: "ANALYSIS AGENT", img: "assets/analysis_agent.png", action: "CHECKING EMA" },
+  { key: "signal", name: "SIGNAL AGENT", img: "assets/signal_agent.png", action: "DECIDING" },
+  { key: "chart", name: "CHART AGENT", img: "assets/chart_agent.png", action: "DRAWING CHART" },
+  { key: "notifier", name: "NOTIFIER AGENT", img: "assets/notifier_agent.png", action: "SENDING ALERT" },
+  { key: "news", name: "NEWS AGENT", img: "assets/news_agent.png", action: "FETCHING NEWS" }
 ];
 
 async function loadStatus() {
@@ -290,7 +297,7 @@ function render(status) {
     desk.innerHTML = `
       <div class="speech">${action}</div>
       <div class="avatar-wrap">
-        <span class="avatar ${working ? '' : 'idle'}">${agent.avatar}</span>
+        <img class="avatar-img ${working ? '' : 'idle'}" src="${agent.img}" alt="${agent.name}">
       </div>
       <div class="agent-name">${agent.name}</div>
       <div class="status-badge ${badgeClass}">${badgeText}</div>
