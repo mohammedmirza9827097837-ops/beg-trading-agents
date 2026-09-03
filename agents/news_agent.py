@@ -14,6 +14,7 @@ def get_top_news(limit=5):
     for feed_url in FEEDS:
         try:
             feed = feedparser.parse(feed_url)
+            print("Feed status:", feed_url, "entries found:", len(feed.entries))
             for entry in feed.entries[:limit]:
                 headlines.append(entry.title)
         except Exception as e:
@@ -30,8 +31,8 @@ def send_news_update():
     for i, h in enumerate(headlines, 1):
         msg += str(i) + ". " + h + "\n"
 
-    notify(msg)
-    print("News sent:", len(headlines), "headlines")
+    result = notify(msg)
+    print("Telegram response:", result)
 
 if __name__ == "__main__":
     send_news_update()
