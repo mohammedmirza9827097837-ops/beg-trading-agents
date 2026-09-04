@@ -11,7 +11,7 @@
   body {
     margin: 0;
     font-family: 'Share Tech Mono', monospace;
-    background: #0a0e14;
+    background: #05070c;
     color: #d0e8d0;
   }
   .pixel { font-family: 'Press Start 2P', monospace; }
@@ -26,11 +26,7 @@
     padding: 10px 16px;
     align-items: center;
   }
-  .brand {
-    font-size: 14px;
-    color: #2ecc71;
-    text-shadow: 0 0 6px #2ecc71;
-  }
+  .brand { font-size: 14px; color: #2ecc71; text-shadow: 0 0 6px #2ecc71; }
   .brand small { display:block; font-size: 9px; color: #7fa88a; margin-top: 3px; }
   .ticker {
     background: #10182a;
@@ -42,165 +38,80 @@
   .ticker .name { font-size: 9px; color: #6fe0a0; }
   .ticker .val { font-size: 13px; color: #eafff0; margin-top: 2px; }
   .ticker .live { color: #2ecc71; font-size: 8px; }
-  .clock-box {
-    margin-left: auto;
-    text-align: right;
-    font-size: 12px;
-    color: #eafff0;
-  }
+  .clock-box { margin-left: auto; text-align: right; font-size: 12px; color: #eafff0; }
   .clock-box .status {
-    font-size: 8px;
-    color: #2ecc71;
-    background: #10241a;
-    padding: 2px 6px;
-    border-radius: 3px;
-    display: inline-block;
-    margin-top: 4px;
+    font-size: 8px; color: #2ecc71; background: #10241a;
+    padding: 2px 6px; border-radius: 3px; display: inline-block; margin-top: 4px;
   }
 
-  /* ===== SKYLINE / COMMAND CENTER ===== */
-  .skyline {
+  /* ===== OFFICE SCENE ===== */
+  .office-scene {
     position: relative;
-    padding: 20px 16px 10px;
-    background:
-      linear-gradient(#101b30, #0a0e14 70%);
-    overflow: hidden;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    aspect-ratio: 1024 / 341;
+    background-image: url('assets/office_bg.png');
+    background-size: cover;
+    background-position: center;
   }
-  
   .command-title {
-    text-align: center;
-    font-size: 12px;
-    color: #6fe0a0;
-    position: relative;
-    margin-bottom: 10px;
-  }
-
-  /* ===== AGENT ROW ===== */
-  .decor-row {
-    display: flex;
-    justify-content: space-around;
-    font-size: 20px;
-    padding: 6px 10px;
-    position: relative;
-    color: #6fe0a0;
-  }
-
-  .pipeline {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-end;
-    justify-content: center;
-    gap: 6px;
-    padding: 30px 12px 20px;
-    position: relative;
-  }
-  .room-label {
     position: absolute;
-    top: 8px;
-    left: 10px;
-    font-size: 8px;
-    background: rgba(0,0,0,0.5);
-    padding: 4px 6px;
-    border-radius: 4px;
-    color: #6fe0a0;
-  }
-
-  .cubicle { display: flex; align-items: flex-end; }
-  .wall {
-    width: 6px;
-    height: 190px;
-    background: #16233a;
-    border: 1px solid #24354f;
-    align-self: flex-end;
-  }
-
-  .desk {
-    background: #101a2c;
-    border: 2px solid #24354f;
-    border-radius: 6px;
-    padding: 40px 8px 8px;
-    text-align: center;
-    box-shadow: 0 0 12px rgba(46,204,113,0.15), 0 3px 0 #050a12;
-    width: 130px;
-    position: relative;
-    min-height: 190px;
-    transition: background 0.4s;
-  }
-  .desk.on-break { background: #24230f; }
-  .monitor {
-    position: absolute;
-    top: 6px;
+    top: 3%;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 22px;
-    z-index: 1;
-    filter: drop-shadow(0 0 4px #2ecc71);
+    font-size: 11px;
+    color: #6fe0a0;
+    text-shadow: 0 0 6px #000, 0 0 10px #2ecc71;
+    text-align: center;
+    z-index: 5;
   }
-  .speech {
+  #updated {
     position: absolute;
-    top: -20px;
+    top: 8%;
     left: 50%;
     transform: translateX(-50%);
+    font-size: 7px;
+    color: #cfe;
+    text-shadow: 0 0 4px #000;
+    z-index: 5;
+  }
+
+  .agent-spot {
+    position: absolute;
+    text-align: center;
+    z-index: 4;
+  }
+  .agent-spot .avatar-img {
+    height: 8vw;
+    max-height: 90px;
+    display: block;
+    margin: 0 auto;
+    filter: drop-shadow(1px 2px 2px rgba(0,0,0,0.6));
+    animation: sway 2.6s infinite ease-in-out;
+  }
+  @keyframes sway {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+  }
+  .agent-spot .avatar-img.idle { opacity: 0.35; filter: grayscale(85%); animation: none; }
+
+  .agent-spot .speech {
     background: #eafff0;
     color: #111;
     font-size: 6px;
-    padding: 3px 5px;
-    border-radius: 4px;
+    padding: 2px 4px;
+    border-radius: 3px;
     white-space: nowrap;
+    margin-bottom: 3px;
+    display: inline-block;
+    font-family: 'Press Start 2P', monospace;
     box-shadow: 0 2px 0 #000;
-    z-index: 3;
-    font-family: 'Press Start 2P', monospace;
   }
-  .speech::after {
-    content: "";
-    position: absolute;
-    bottom: -5px; left: 50%;
-    transform: translateX(-50%);
-    border-width: 5px 4px 0 4px;
-    border-style: solid;
-    border-color: #eafff0 transparent transparent transparent;
-  }
-
-  .avatar-wrap {
-    height: 110px;
-    position: absolute;
-    top: 34px; left: 0; right: 0;
-    overflow: visible;
-    z-index: 2;
-  }
-  .avatar-img {
-    height: 110px;
-    display: inline-block;
-    animation: walk 2.2s infinite ease-in-out;
-    filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.5));
-  }
-  @keyframes walk {
-    0%   { transform: translateX(-16px) scaleX(1); }
-    45%  { transform: translateX(16px) scaleX(1); }
-    50%  { transform: translateX(16px) scaleX(-1); }
-    95%  { transform: translateX(-16px) scaleX(-1); }
-    100% { transform: translateX(-16px) scaleX(1); }
-  }
-  .avatar-img.idle { animation: none; opacity: 0.4; filter: grayscale(80%); }
-  .avatar-img.on-break { animation: breakwalk 3s ease-in-out; }
-  @keyframes breakwalk {
-    0%   { transform: translateX(0) translateY(0); opacity: 1; }
-    40%  { transform: translateX(60px) translateY(-6px); opacity: 0.7; }
-    50%  { transform: translateX(60px) translateY(-6px) scaleX(-1); opacity: 0.7; }
-    60%  { transform: translateX(60px) translateY(-6px) scaleX(-1); opacity: 0.7; }
-    100% { transform: translateX(0) translateY(0); opacity: 1; }
-  }
-
-  .agent-name {
+  .agent-spot .status-badge {
+    display: block;
     font-size: 6px;
-    margin: 6px 0 3px;
-    color: #6fe0a0;
-    font-family: 'Press Start 2P', monospace;
-  }
-  .status-badge {
-    display: inline-block;
-    font-size: 6px;
-    padding: 3px 5px;
+    padding: 2px 4px;
     border-radius: 3px;
     margin-top: 3px;
     font-family: 'Press Start 2P', monospace;
@@ -208,36 +119,8 @@
   .status-working { background: #2ecc71; color: #06210f; }
   .status-idle { background: #2a3a4a; color: #9fb8c8; }
   .status-alert { background: #f1c40f; color: #3d2b00; animation: pulse 1s infinite; }
-  .status-break { background: #a97c50; color: #2b1a06; }
+  .status-break { background: #e67e22; color: #2b1a06; }
   @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
-
-  .arrow {
-    font-size: 20px; color: #6fe0a0;
-    animation: arrowpulse 1.2s infinite;
-    align-self: center; margin-bottom: 60px;
-    filter: drop-shadow(0 0 4px #2ecc71);
-  }
-  .arrow.dim { color: #2a3a4a; animation: none; filter: none; }
-  @keyframes arrowpulse {
-    0%, 100% { opacity: 1; transform: translateX(0); }
-    50% { opacity: 0.4; transform: translateX(4px); }
-  }
-
-  .coffee-corner {
-    background: #101a2c;
-    border: 2px solid #24354f;
-    border-radius: 6px;
-    width: 90px;
-    min-height: 190px;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: flex-end;
-    padding-bottom: 8px;
-    font-size: 30px;
-  }
-  .coffee-corner .label {
-    font-size: 6px; color: #6fe0a0; margin-top: 6px;
-    font-family: 'Press Start 2P', monospace;
-  }
 
   /* ===== SIGNAL BOARD ===== */
   .signal-section {
@@ -267,31 +150,14 @@
   .chart-wrap img { width: 100%; max-width: 700px; border: 2px solid #244034; border-radius: 8px; }
 
   /* ===== DECOR ROOMS ===== */
-  .rooms-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2px;
-    background: #050a12;
-  }
+  .rooms-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; background: #050a12; }
   @media (max-width: 800px) { .rooms-row { grid-template-columns: 1fr 1fr; } }
-  .room-card {
-    background: #0d1420;
-    border: 1px solid #1e3a2f;
-    padding: 14px 10px;
-    text-align: center;
-  }
-  .room-card .rtitle {
-    font-size: 9px; color: #6fe0a0;
-    font-family: 'Press Start 2P', monospace;
-    margin-bottom: 8px;
-  }
+  .room-card { background: #0d1420; border: 1px solid #1e3a2f; padding: 14px 10px; text-align: center; }
+  .room-card .rtitle { font-size: 9px; color: #6fe0a0; font-family: 'Press Start 2P', monospace; margin-bottom: 8px; }
   .room-card .ricon { font-size: 26px; margin-bottom: 6px; }
   .room-card .rdesc { font-size: 10px; color: #8fb0a0; line-height: 1.5; }
 
-  footer {
-    text-align: center; font-size: 8px; color: #4a6656;
-    padding: 14px; background: #050a12; border-top: 1px solid #1e3a2f;
-  }
+  footer { text-align: center; font-size: 8px; color: #4a6656; padding: 14px; background: #050a12; border-top: 1px solid #1e3a2f; }
 </style>
 </head>
 <body>
@@ -317,13 +183,10 @@
   </div>
 </div>
 
-<div class="skyline">
+<div class="office-scene">
   <div class="command-title pixel">PIXEL AGENTS COMMAND CENTER</div>
-  <div id="updated" style="text-align:center;font-size:9px;color:#4a6656;">Loading...</div>
-
-  <div class="pipeline" id="pipeline">
-    <div class="room-label">MAIN OFFICE - WORKFLOW</div>
-  </div>
+  <div id="updated">Loading...</div>
+  <div id="agentLayer"></div>
 </div>
 
 <div class="signal-section">
@@ -362,12 +225,12 @@
 
 <script>
 const AGENTS = [
-  { key: "data", name: "DATA AGENT", img: "assets/data_agent.png", action: "FETCHING PRICE" },
-  { key: "analysis", name: "ANALYSIS AGENT", img: "assets/analysis_agent.png", action: "CHECKING EMA" },
-  { key: "signal", name: "SIGNAL AGENT", img: "assets/signal_agent.png", action: "DECIDING" },
-  { key: "chart", name: "CHART AGENT", img: "assets/chart_agent.png", action: "DRAWING CHART" },
-  { key: "notifier", name: "NOTIFIER AGENT", img: "assets/notifier_agent.png", action: "SENDING ALERT" },
-  { key: "news", name: "NEWS AGENT", img: "assets/news_agent.png", action: "FETCHING NEWS" }
+  { key: "data", name: "DATA AGENT", img: "assets/data_agent.png", action: "FETCHING PRICE", left: "10%", top: "42%" },
+  { key: "analysis", name: "ANALYSIS AGENT", img: "assets/analysis_agent.png", action: "CHECKING EMA", left: "22%", top: "42%" },
+  { key: "signal", name: "SIGNAL AGENT", img: "assets/signal_agent.png", action: "DECIDING", left: "36%", top: "55%" },
+  { key: "chart", name: "CHART AGENT", img: "assets/chart_agent.png", action: "DRAWING CHART", left: "46%", top: "38%" },
+  { key: "notifier", name: "NOTIFIER AGENT", img: "assets/notifier_agent.png", action: "SENDING ALERT", left: "68%", top: "50%" },
+  { key: "news", name: "NEWS AGENT", img: "assets/news_agent.png", action: "FETCHING NEWS", left: "83%", top: "62%" }
 ];
 
 function updateClock() {
@@ -402,10 +265,10 @@ function render(status) {
   const niftyVal = status.nifty_close || status.entry || "-";
   document.getElementById('tickerNifty').innerText = niftyVal;
 
-  const pipelineEl = document.getElementById('pipeline');
-  pipelineEl.innerHTML = '<div class="room-label">MAIN OFFICE - WORKFLOW</div>';
+  const layer = document.getElementById('agentLayer');
+  layer.innerHTML = "";
 
-  AGENTS.forEach((agent, idx) => {
+  AGENTS.forEach((agent) => {
     let working = true;
     let badgeClass = "status-working";
     let badgeText = "WORKING";
@@ -436,47 +299,20 @@ function render(status) {
       action = "OFF HOURS";
     }
 
-    const cubicle = document.createElement('div');
-    cubicle.className = "cubicle";
-
-    const desk = document.createElement('div');
-    desk.className = "desk";
-    desk.id = "desk-" + agent.key;
-    desk.dataset.working = working ? "1" : "0";
-    desk.innerHTML = `
+    const spot = document.createElement('div');
+    spot.className = "agent-spot";
+    spot.id = "spot-" + agent.key;
+    spot.dataset.working = working ? "1" : "0";
+    spot.style.left = agent.left;
+    spot.style.top = agent.top;
+    spot.style.transform = "translateX(-50%)";
+    spot.innerHTML = `
       <div class="speech">${action}</div>
-      <div class="monitor">🖥️</div>
-      <div class="avatar-wrap">
-        <img class="avatar-img ${working ? '' : 'idle'}" src="${agent.img}" alt="${agent.name}">
-      </div>
-      <div class="agent-name">${agent.name}</div>
+      <img class="avatar-img ${working ? '' : 'idle'}" src="${agent.img}" alt="${agent.name}">
       <div class="status-badge ${badgeClass}">${badgeText}</div>
     `;
-    cubicle.appendChild(desk);
-
-    if (idx > 0) {
-      const wall = document.createElement('div');
-      wall.className = "wall";
-      pipelineEl.appendChild(wall);
-    }
-    pipelineEl.appendChild(cubicle);
-
-    if (idx < AGENTS.length - 1) {
-      const arrow = document.createElement('div');
-      arrow.className = "arrow" + (working ? "" : " dim");
-      arrow.innerText = "➡️";
-      pipelineEl.appendChild(arrow);
-    }
+    layer.appendChild(spot);
   });
-
-  const wall2 = document.createElement('div');
-  wall2.className = "wall";
-  pipelineEl.appendChild(wall2);
-
-  const corner = document.createElement('div');
-  corner.className = "coffee-corner";
-  corner.innerHTML = '☕<div class="label">COFFEE<br>CORNER</div>';
-  pipelineEl.appendChild(corner);
 
   const signalTextEl = document.getElementById('signalText');
   const metricsBox = document.getElementById('metricsBox');
@@ -511,33 +347,28 @@ function render(status) {
 }
 
 function sendOnCoffeeBreak() {
-  const workingDesks = AGENTS.filter(a => {
-    const el = document.getElementById('desk-' + a.key);
+  const workingSpots = AGENTS.filter(a => {
+    const el = document.getElementById('spot-' + a.key);
     return el && el.dataset.working === "1";
   });
-  if (workingDesks.length === 0) return;
+  if (workingSpots.length === 0) return;
 
-  const pick = workingDesks[Math.floor(Math.random() * workingDesks.length)];
-  const desk = document.getElementById('desk-' + pick.key);
-  if (!desk) return;
+  const pick = workingSpots[Math.floor(Math.random() * workingSpots.length)];
+  const spot = document.getElementById('spot-' + pick.key);
+  if (!spot) return;
 
-  const img = desk.querySelector('.avatar-img');
-  const badge = desk.querySelector('.status-badge');
-  const speech = desk.querySelector('.speech');
+  const badge = spot.querySelector('.status-badge');
+  const speech = spot.querySelector('.speech');
 
   const oldBadgeText = badge.innerText;
   const oldBadgeClass = badge.className;
   const oldSpeech = speech.innerText;
 
-  desk.classList.add('on-break');
-  img.classList.add('on-break');
   badge.className = "status-badge status-break";
   badge.innerText = "COFFEE BREAK";
   speech.innerText = "BRB, COFFEE! ☕";
 
   setTimeout(() => {
-    desk.classList.remove('on-break');
-    img.classList.remove('on-break');
     badge.className = oldBadgeClass;
     badge.innerText = oldBadgeText;
     speech.innerText = oldSpeech;
