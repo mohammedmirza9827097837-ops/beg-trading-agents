@@ -29,7 +29,7 @@
   }
 
   .office-frame {
-    max-width: 1100px;
+    max-width: 1150px;
     margin: 0 auto;
     border: 6px solid #4a2f1a;
     border-radius: 10px;
@@ -90,6 +90,10 @@
     width: 130px;
     position: relative;
     min-height: 190px;
+    transition: background 0.4s;
+  }
+  .desk.on-break {
+    background: #6b5a1a;
   }
   .monitor {
     position: absolute;
@@ -152,6 +156,16 @@
     opacity: 0.4;
     filter: grayscale(80%);
   }
+  .avatar-img.on-break {
+    animation: breakwalk 3s ease-in-out;
+  }
+  @keyframes breakwalk {
+    0%   { transform: translateX(0) translateY(0); opacity: 1; }
+    40%  { transform: translateX(60px) translateY(-6px); opacity: 0.7; }
+    50%  { transform: translateX(60px) translateY(-6px) scaleX(-1); opacity: 0.7; }
+    60%  { transform: translateX(60px) translateY(-6px) scaleX(-1); opacity: 0.7; }
+    100% { transform: translateX(0) translateY(0); opacity: 1; }
+  }
 
   .agent-name {
     font-size: 6px;
@@ -168,6 +182,7 @@
   .status-working { background: #2ecc71; color: #003300; }
   .status-idle { background: #555; color: #ccc; }
   .status-alert { background: #f1c40f; color: #3d2b00; animation: pulse 1s infinite; }
+  .status-break { background: #a97c50; color: #2b1a06; }
   @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
 
   .arrow {
@@ -181,6 +196,25 @@
   @keyframes arrowpulse {
     0%, 100% { opacity: 1; transform: translateX(0); }
     50% { opacity: 0.4; transform: translateX(4px); }
+  }
+
+  .coffee-corner {
+    background: #3b2c1e;
+    border: 3px solid #241a10;
+    border-radius: 6px;
+    width: 90px;
+    min-height: 190px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding-bottom: 8px;
+    font-size: 30px;
+  }
+  .coffee-corner .label {
+    font-size: 6px;
+    color: #ffd700;
+    margin-top: 6px;
   }
 
   .signal-section {
@@ -273,10 +307,13 @@ const AGENTS = [
   { key: "news", name: "NEWS AGENT", img: "assets/news_agent.png", action: "FETCHING NEWS" }
 ];
 
+let lastStatus = null;
+
 async function loadStatus() {
   try {
     const res = await fetch('status.json?t=' + Date.now());
     const status = await res.json();
+    lastStatus = status;
     render(status);
   } catch (e) {
     document.getElementById('updated').innerText = "Waiting for first data...";
@@ -328,6 +365,11 @@ function render(status) {
 
     const desk = document.createElement('div');
     desk.className = "desk";
+    desk.id = "desk-" + agent.key;
+    desk.dataset.action = action;
+    desk.dataset.badgeClass = badgeClass;
+    desk.dataset.badgeText = badgeText;
+    desk.dataset.working = working ? "1" : "0";
     desk.innerHTML = `
       <div class="speech">${action}</div>
       <div class="monitor">🖥️</div>
@@ -353,6 +395,15 @@ function render(status) {
       pipelineEl.appendChild(arrow);
     }
   });
+
+  const wall2 = document.createElement('div');
+  wall2.className = "wall";
+  pipelineEl.appendChild(wall2);
+
+  const corner = document.createElement('div');
+  corner.className = "coffee-corner";
+  corner.innerHTML = '☕<div class="label">COFFEE<br>CORNER</div>';
+  pipelineEl.appendChild(corner);
 
   const signalTextEl = document.getElementById('signalText');
   const metricsBox = document.getElementById('metricsBox');
@@ -386,8 +437,43 @@ function render(status) {
   }
 }
 
+function sendOnCoffeeBreak() {
+  const workingDesks = AGENTS.filter(a => {
+    const el = document.getElementById('desk-' + a.key);
+    return el && el.dataset.working === "1";
+  });
+  if (workingDesks.length === 0) return;
+
+  const pick = workingDesks[Math.floor(Math.random() * workingDesks.length)];
+  const desk = document.getElementById('desk-' + pick.key);
+  if (!desk) return;
+
+  const img = desk.querySelector('.avatar-img');
+  const badge = desk.querySelector('.status-badge');
+  const speech = desk.querySelector('.speech');
+
+  const oldBadgeText = badge.innerText;
+  const oldBadgeClass = badge.className;
+  const oldSpeech = speech.innerText;
+
+  desk.classList.add('on-break');
+  img.classList.add('on-break');
+  badge.className = "status-badge status-break";
+  badge.innerText = "COFFEE BREAK";
+  speech.innerText = "BRB, COFFEE! ☕";
+
+  setTimeout(() => {
+    desk.classList.remove('on-break');
+    img.classList.remove('on-break');
+    badge.className = oldBadgeClass;
+    badge.innerText = oldBadgeText;
+    speech.innerText = oldSpeech;
+  }, 3000);
+}
+
 loadStatus();
 setInterval(loadStatus, 30000);
+setInterval(sendOnCoffeeBreak, 12000);
 </script>
 
 </body>
