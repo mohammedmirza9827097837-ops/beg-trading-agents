@@ -1,9 +1,6 @@
 {
-  "agent_status": "active_no_signal",
+  "agent_status": "outside_window",
   "signal": "NONE",
-  "nifty_close": 23924.55,
-  "ema_fast": 23913.41,
-  "ema_slow": 23909.17,
-  "message": "No crossover signal right now",
-  "updated_at": "2026-09-04 09:47:51 IST"
+  "message": "Outside trading window",
+  "updated_at": "2026-09-04 13:21:29 IST"
 }
