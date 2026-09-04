@@ -16,7 +16,6 @@
   }
   .pixel { font-family: 'Press Start 2P', monospace; }
 
-  /* ===== TOP TICKER ===== */
   .ticker-bar {
     display: flex;
     flex-wrap: wrap;
@@ -44,7 +43,6 @@
     padding: 2px 6px; border-radius: 3px; display: inline-block; margin-top: 4px;
   }
 
-  /* ===== OFFICE SCENE ===== */
   .office-scene {
     position: relative;
     width: 100%;
@@ -94,7 +92,7 @@
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-3px); }
   }
-    .agent-spot .avatar-img.idle { opacity: 0.75; filter: grayscale(40%); animation: none; }
+  .agent-spot .avatar-img.idle { opacity: 0.75; filter: grayscale(40%); animation: none; }
 
   .agent-spot .speech {
     background: #eafff0;
@@ -122,7 +120,6 @@
   .status-break { background: #e67e22; color: #2b1a06; }
   @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
 
-  /* ===== SIGNAL BOARD ===== */
   .signal-section {
     background: #0d1420;
     padding: 20px 16px;
@@ -149,7 +146,6 @@
   .chart-wrap { text-align: center; padding: 16px; background: #070b12; }
   .chart-wrap img { width: 100%; max-width: 700px; border: 2px solid #244034; border-radius: 8px; }
 
-  /* ===== DECOR ROOMS ===== */
   .rooms-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; background: #050a12; }
   @media (max-width: 800px) { .rooms-row { grid-template-columns: 1fr 1fr; } }
   .room-card { background: #0d1420; border: 1px solid #1e3a2f; padding: 14px 10px; text-align: center; }
@@ -233,6 +229,8 @@ const AGENTS = [
   { key: "news", name: "NEWS AGENT", img: "assets/news_agent.png", action: "FETCHING NEWS", left: "83%", top: "62%" }
 ];
 
+const COFFEE_SPOT = { left: "83%", top: "62%" };
+
 function updateClock() {
   const now = new Date();
   const istOffset = 5.5 * 60 * 60000;
@@ -306,11 +304,10 @@ function render(status) {
     spot.style.left = agent.left;
     spot.style.top = agent.top;
     spot.style.transform = "translateX(-50%)";
-    spot.innerHTML = `
-      <div class="speech">${action}</div>
-      <img class="avatar-img ${working ? '' : 'idle'}" src="${agent.img}" alt="${agent.name}">
-      <div class="status-badge ${badgeClass}">${badgeText}</div>
-    `;
+    spot.innerHTML =
+      '<div class="speech">' + action + '</div>' +
+      '<img class="avatar-img ' + (working ? '' : 'idle') + '" src="' + agent.img + '" alt="' + agent.name + '">' +
+      '<div class="status-badge ' + badgeClass + '">' + badgeText + '</div>';
     layer.appendChild(spot);
   });
 
@@ -319,11 +316,10 @@ function render(status) {
   if (agentState === "signal_sent") {
     signalTextEl.innerText = signal;
     signalTextEl.className = "signal-text " + (signal === "BUY CALL" ? "buy-call" : "buy-put");
-    metricsBox.innerHTML = `
-      <div>ENTRY<br>${status.entry}</div>
-      <div>TARGET<br>${status.target}</div>
-      <div>SL<br>${status.stop_loss}</div>
-    `;
+    metricsBox.innerHTML =
+      '<div>ENTRY<br>' + status.entry + '</div>' +
+      '<div>TARGET<br>' + status.target + '</div>' +
+      '<div>SL<br>' + status.stop_loss + '</div>';
   } else if (agentState === "outside_window") {
     signalTextEl.innerText = "OUTSIDE WINDOW";
     signalTextEl.className = "signal-text none-signal";
@@ -346,10 +342,8 @@ function render(status) {
   }
 }
 
-const COFFEE_SPOT = { left: "83%", top: "62%" };
-
 function sendOnCoffeeBreak() {
-  const workingSpots = AGENTS.filter(a => {
+  const workingSpots = AGENTS.filter(function(a) {
     const el = document.getElementById('spot-' + a.key);
     return el && el.dataset.working === "1";
   });
@@ -361,7 +355,6 @@ function sendOnCoffeeBreak() {
 
   const badge = spot.querySelector('.status-badge');
   const speech = spot.querySelector('.speech');
-  const img = spot.querySelector('.avatar-img');
 
   const oldBadgeText = badge.innerText;
   const oldBadgeClass = badge.className;
@@ -372,23 +365,22 @@ function sendOnCoffeeBreak() {
   spot.style.transition = "left 1.2s ease-in-out, top 1.2s ease-in-out";
   badge.className = "status-badge status-break";
   badge.innerText = "COFFEE BREAK";
-  speech.innerText = "GOING FOR COFFEE ☕";
+  speech.innerText = "GOING FOR COFFEE";
 
   spot.style.left = COFFEE_SPOT.left;
   spot.style.top = COFFEE_SPOT.top;
 
-  setTimeout(() => {
-    speech.innerText = "AHH, REFRESHED!";
+  setTimeout(function() {
+    speech.innerText = "AHH REFRESHED";
   }, 1500);
 
-  setTimeout(() => {
+  setTimeout(function() {
     spot.style.left = oldLeft;
     spot.style.top = oldTop;
     badge.className = oldBadgeClass;
     badge.innerText = oldBadgeText;
     speech.innerText = oldSpeech;
   }, 4000);
-}
 }
 
 updateClock();
