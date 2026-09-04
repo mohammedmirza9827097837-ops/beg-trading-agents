@@ -346,6 +346,8 @@ function render(status) {
   }
 }
 
+const COFFEE_SPOT = { left: "83%", top: "62%" };
+
 function sendOnCoffeeBreak() {
   const workingSpots = AGENTS.filter(a => {
     const el = document.getElementById('spot-' + a.key);
@@ -359,20 +361,34 @@ function sendOnCoffeeBreak() {
 
   const badge = spot.querySelector('.status-badge');
   const speech = spot.querySelector('.speech');
+  const img = spot.querySelector('.avatar-img');
 
   const oldBadgeText = badge.innerText;
   const oldBadgeClass = badge.className;
   const oldSpeech = speech.innerText;
+  const oldLeft = spot.style.left;
+  const oldTop = spot.style.top;
 
+  spot.style.transition = "left 1.2s ease-in-out, top 1.2s ease-in-out";
   badge.className = "status-badge status-break";
   badge.innerText = "COFFEE BREAK";
-  speech.innerText = "BRB, COFFEE! ☕";
+  speech.innerText = "GOING FOR COFFEE ☕";
+
+  spot.style.left = COFFEE_SPOT.left;
+  spot.style.top = COFFEE_SPOT.top;
 
   setTimeout(() => {
+    speech.innerText = "AHH, REFRESHED!";
+  }, 1500);
+
+  setTimeout(() => {
+    spot.style.left = oldLeft;
+    spot.style.top = oldTop;
     badge.className = oldBadgeClass;
     badge.innerText = oldBadgeText;
     speech.innerText = oldSpeech;
-  }, 3000);
+  }, 4000);
+}
 }
 
 updateClock();
