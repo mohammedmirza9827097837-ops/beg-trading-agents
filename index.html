@@ -2,48 +2,98 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>BEG Trading Agents - Office</title>
+<title>BEG Trading Agents Office</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
   * { box-sizing: border-box; }
   body {
     margin: 0;
-    font-family: 'Press Start 2P', monospace;
-    background: #1a1a2e;
-    color: #fff;
-    padding: 16px;
+    font-family: 'Share Tech Mono', monospace;
+    background: #0a0e14;
+    color: #d0e8d0;
   }
-  h1 {
-    text-align: center;
-    font-size: 16px;
-    color: #ffd700;
-    text-shadow: 2px 2px #000;
-    margin-bottom: 4px;
+  .pixel { font-family: 'Press Start 2P', monospace; }
+
+  /* ===== TOP TICKER ===== */
+  .ticker-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    background: #0d1420;
+    border-bottom: 3px solid #1e3a2f;
+    padding: 10px 16px;
+    align-items: center;
   }
-  #updated {
-    text-align: center;
-    font-size: 9px;
-    color: #aaa;
-    margin-bottom: 16px;
+  .brand {
+    font-size: 14px;
+    color: #2ecc71;
+    text-shadow: 0 0 6px #2ecc71;
+  }
+  .brand small { display:block; font-size: 9px; color: #7fa88a; margin-top: 3px; }
+  .ticker {
+    background: #10182a;
+    border: 1px solid #244034;
+    border-radius: 6px;
+    padding: 6px 12px;
+    min-width: 110px;
+  }
+  .ticker .name { font-size: 9px; color: #6fe0a0; }
+  .ticker .val { font-size: 13px; color: #eafff0; margin-top: 2px; }
+  .ticker .live { color: #2ecc71; font-size: 8px; }
+  .clock-box {
+    margin-left: auto;
+    text-align: right;
+    font-size: 12px;
+    color: #eafff0;
+  }
+  .clock-box .status {
+    font-size: 8px;
+    color: #2ecc71;
+    background: #10241a;
+    padding: 2px 6px;
+    border-radius: 3px;
+    display: inline-block;
+    margin-top: 4px;
   }
 
-  .office-frame {
-    max-width: 1150px;
-    margin: 0 auto;
-    border: 6px solid #4a2f1a;
-    border-radius: 10px;
+  /* ===== SKYLINE / COMMAND CENTER ===== */
+  .skyline {
+    position: relative;
+    padding: 20px 16px 10px;
+    background:
+      linear-gradient(#101b30, #0a0e14 70%);
     overflow: hidden;
-    box-shadow: 0 8px 0 #000, inset 0 0 0 4px #6b4423;
+  }
+  .skyline::before {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; top: 0; height: 140px;
+    background-image:
+      repeating-linear-gradient(90deg,
+        rgba(255,220,120,0.15) 0 6px,
+        transparent 6px 26px),
+      linear-gradient(#1a2740, #0e1626);
+    background-size: 100% 12px, 100% 100%;
+    opacity: 0.5;
+  }
+  .command-title {
+    text-align: center;
+    font-size: 12px;
+    color: #6fe0a0;
+    position: relative;
+    margin-bottom: 10px;
   }
 
+  /* ===== AGENT ROW ===== */
   .decor-row {
     display: flex;
     justify-content: space-around;
-    font-size: 26px;
-    padding: 10px 10px 0;
-    background:
-      repeating-linear-gradient(90deg, #a97c50 0 40px, #96693f 40px 80px);
+    font-size: 20px;
+    padding: 6px 10px;
+    position: relative;
+    color: #6fe0a0;
   }
 
   .pipeline {
@@ -52,8 +102,6 @@
     align-items: flex-end;
     justify-content: center;
     gap: 6px;
-    background:
-      repeating-linear-gradient(90deg, #a97c50 0 40px, #96693f 40px 80px);
     padding: 30px 12px 20px;
     position: relative;
   }
@@ -65,36 +113,31 @@
     background: rgba(0,0,0,0.5);
     padding: 4px 6px;
     border-radius: 4px;
-    color: #ffd700;
+    color: #6fe0a0;
   }
 
-  .cubicle {
-    display: flex;
-    align-items: flex-end;
-  }
+  .cubicle { display: flex; align-items: flex-end; }
   .wall {
-    width: 8px;
+    width: 6px;
     height: 190px;
-    background: #7a5230;
-    border: 2px solid #3a2410;
+    background: #16233a;
+    border: 1px solid #24354f;
     align-self: flex-end;
   }
 
   .desk {
-    background: #5c3a1a;
-    border: 3px solid #3a2410;
+    background: #101a2c;
+    border: 2px solid #24354f;
     border-radius: 6px;
     padding: 40px 8px 8px;
     text-align: center;
-    box-shadow: 0 3px 0 #241505;
+    box-shadow: 0 0 12px rgba(46,204,113,0.15), 0 3px 0 #050a12;
     width: 130px;
     position: relative;
     min-height: 190px;
     transition: background 0.4s;
   }
-  .desk.on-break {
-    background: #6b5a1a;
-  }
+  .desk.on-break { background: #24230f; }
   .monitor {
     position: absolute;
     top: 6px;
@@ -102,13 +145,14 @@
     transform: translateX(-50%);
     font-size: 22px;
     z-index: 1;
+    filter: drop-shadow(0 0 4px #2ecc71);
   }
   .speech {
     position: absolute;
     top: -20px;
     left: 50%;
     transform: translateX(-50%);
-    background: #fff;
+    background: #eafff0;
     color: #111;
     font-size: 6px;
     padding: 3px 5px;
@@ -116,33 +160,30 @@
     white-space: nowrap;
     box-shadow: 0 2px 0 #000;
     z-index: 3;
+    font-family: 'Press Start 2P', monospace;
   }
   .speech::after {
     content: "";
     position: absolute;
-    bottom: -5px;
-    left: 50%;
+    bottom: -5px; left: 50%;
     transform: translateX(-50%);
     border-width: 5px 4px 0 4px;
     border-style: solid;
-    border-color: #fff transparent transparent transparent;
+    border-color: #eafff0 transparent transparent transparent;
   }
 
   .avatar-wrap {
     height: 110px;
     position: absolute;
-    top: 34px;
-    left: 0;
-    right: 0;
+    top: 34px; left: 0; right: 0;
     overflow: visible;
     z-index: 2;
   }
   .avatar-img {
     height: 110px;
-    position: relative;
     display: inline-block;
     animation: walk 2.2s infinite ease-in-out;
-    filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.4));
+    filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.5));
   }
   @keyframes walk {
     0%   { transform: translateX(-16px) scaleX(1); }
@@ -151,14 +192,8 @@
     95%  { transform: translateX(-16px) scaleX(-1); }
     100% { transform: translateX(-16px) scaleX(1); }
   }
-  .avatar-img.idle {
-    animation: none;
-    opacity: 0.4;
-    filter: grayscale(80%);
-  }
-  .avatar-img.on-break {
-    animation: breakwalk 3s ease-in-out;
-  }
+  .avatar-img.idle { animation: none; opacity: 0.4; filter: grayscale(80%); }
+  .avatar-img.on-break { animation: breakwalk 3s ease-in-out; }
   @keyframes breakwalk {
     0%   { transform: translateX(0) translateY(0); opacity: 1; }
     40%  { transform: translateX(60px) translateY(-6px); opacity: 0.7; }
@@ -170,7 +205,8 @@
   .agent-name {
     font-size: 6px;
     margin: 6px 0 3px;
-    color: #ffe9b0;
+    color: #6fe0a0;
+    font-family: 'Press Start 2P', monospace;
   }
   .status-badge {
     display: inline-block;
@@ -178,124 +214,162 @@
     padding: 3px 5px;
     border-radius: 3px;
     margin-top: 3px;
+    font-family: 'Press Start 2P', monospace;
   }
-  .status-working { background: #2ecc71; color: #003300; }
-  .status-idle { background: #555; color: #ccc; }
+  .status-working { background: #2ecc71; color: #06210f; }
+  .status-idle { background: #2a3a4a; color: #9fb8c8; }
   .status-alert { background: #f1c40f; color: #3d2b00; animation: pulse 1s infinite; }
   .status-break { background: #a97c50; color: #2b1a06; }
   @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
 
   .arrow {
-    font-size: 20px;
-    color: #ffd700;
+    font-size: 20px; color: #6fe0a0;
     animation: arrowpulse 1.2s infinite;
-    align-self: center;
-    margin-bottom: 60px;
+    align-self: center; margin-bottom: 60px;
+    filter: drop-shadow(0 0 4px #2ecc71);
   }
-  .arrow.dim { color: #555; animation: none; }
+  .arrow.dim { color: #2a3a4a; animation: none; filter: none; }
   @keyframes arrowpulse {
     0%, 100% { opacity: 1; transform: translateX(0); }
     50% { opacity: 0.4; transform: translateX(4px); }
   }
 
   .coffee-corner {
-    background: #3b2c1e;
-    border: 3px solid #241a10;
+    background: #101a2c;
+    border: 2px solid #24354f;
     border-radius: 6px;
     width: 90px;
     min-height: 190px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: flex-end;
     padding-bottom: 8px;
     font-size: 30px;
   }
   .coffee-corner .label {
-    font-size: 6px;
-    color: #ffd700;
-    margin-top: 6px;
+    font-size: 6px; color: #6fe0a0; margin-top: 6px;
+    font-family: 'Press Start 2P', monospace;
   }
 
+  /* ===== SIGNAL BOARD ===== */
   .signal-section {
-    background:
-      repeating-linear-gradient(90deg, #2c3e6b 0 40px, #26355c 40px 80px);
+    background: #0d1420;
     padding: 20px 16px;
     text-align: center;
-    border-top: 4px solid #4a2f1a;
+    border-top: 2px solid #1e3a2f;
   }
   .desk-table {
-    background: #3b2c1e;
-    border: 4px solid #241a10;
-    width: 140px;
-    height: 60px;
+    background: #101a2c;
+    border: 2px solid #24354f;
+    width: 140px; height: 60px;
     margin: 0 auto 10px;
     border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     font-size: 26px;
-    box-shadow: 0 4px 0 #150e08;
+    box-shadow: 0 0 14px rgba(46,204,113,0.2);
   }
-  .signal-text {
-    font-size: 13px;
-    margin: 10px 0;
-  }
+  .signal-text { font-size: 13px; margin: 10px 0; font-family: 'Press Start 2P', monospace; }
   .buy-call { color: #2ecc71; text-shadow: 0 0 8px #2ecc71; }
   .buy-put { color: #e74c3c; text-shadow: 0 0 8px #e74c3c; }
-  .none-signal { color: #aaa; }
+  .none-signal { color: #7fa88a; }
+  .metrics { display: flex; justify-content: center; gap: 20px; font-size: 7px; margin-top: 10px; font-family:'Press Start 2P',monospace;}
+  .metrics div { background: rgba(46,204,113,0.08); border:1px solid #244034; padding: 6px 8px; border-radius: 4px; }
 
-  .metrics {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    font-size: 7px;
-    margin-top: 10px;
+  .chart-wrap { text-align: center; padding: 16px; background: #070b12; }
+  .chart-wrap img { width: 100%; max-width: 700px; border: 2px solid #244034; border-radius: 8px; }
+
+  /* ===== DECOR ROOMS ===== */
+  .rooms-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    background: #050a12;
   }
-  .metrics div { background: rgba(0,0,0,0.4); padding: 6px 8px; border-radius: 4px; }
-
-  .chart-wrap {
+  @media (max-width: 800px) { .rooms-row { grid-template-columns: 1fr 1fr; } }
+  .room-card {
+    background: #0d1420;
+    border: 1px solid #1e3a2f;
+    padding: 14px 10px;
     text-align: center;
-    padding: 16px;
-    background: #12121f;
   }
-  .chart-wrap img {
-    width: 100%;
-    max-width: 700px;
-    border: 4px solid #ffd700;
-    border-radius: 8px;
+  .room-card .rtitle {
+    font-size: 9px; color: #6fe0a0;
+    font-family: 'Press Start 2P', monospace;
+    margin-bottom: 8px;
   }
+  .room-card .ricon { font-size: 26px; margin-bottom: 6px; }
+  .room-card .rdesc { font-size: 10px; color: #8fb0a0; line-height: 1.5; }
 
   footer {
-    text-align: center;
-    font-size: 7px;
-    color: #777;
-    margin-top: 20px;
+    text-align: center; font-size: 8px; color: #4a6656;
+    padding: 14px; background: #050a12; border-top: 1px solid #1e3a2f;
   }
 </style>
 </head>
 <body>
 
-<h1>BEG TRADING AGENTS OFFICE</h1>
-<div id="updated">Loading...</div>
+<div class="ticker-bar">
+  <div class="brand pixel">BEG AGENTS<small>TRADING OFFICE</small></div>
+  <div class="ticker">
+    <div class="name">NIFTY 50</div>
+    <div class="val" id="tickerNifty">-</div>
+    <div class="live">● LIVE</div>
+  </div>
+  <div class="ticker">
+    <div class="name">DISCIPLINE</div>
+    <div class="val">DATA-DRIVEN</div>
+  </div>
+  <div class="ticker">
+    <div class="name">MODE</div>
+    <div class="val">PAPER TRADE</div>
+  </div>
+  <div class="clock-box">
+    <div id="clockNow" class="pixel">--:--</div>
+    <div class="status" id="marketStatus">CHECKING...</div>
+  </div>
+</div>
 
-<div class="office-frame">
-  <div class="decor-row">📚 🪴 🖼️ 🕐 🪴 📚</div>
+<div class="skyline">
+  <div class="command-title pixel">PIXEL AGENTS COMMAND CENTER</div>
+  <div id="updated" style="text-align:center;font-size:9px;color:#4a6656;">Loading...</div>
+
   <div class="pipeline" id="pipeline">
     <div class="room-label">MAIN OFFICE - WORKFLOW</div>
   </div>
-
-  <div class="signal-section">
-    <div class="desk-table">📈</div>
-    <h2 style="font-size:10px;color:#ffd700;">NIFTY SIGNAL BOARD</h2>
-    <div class="signal-text none-signal" id="signalText">Loading...</div>
-    <div class="metrics" id="metricsBox"></div>
-  </div>
-
-  <div class="chart-wrap" id="chartWrap"></div>
 </div>
 
-<footer>Auto-refreshes every 30s. Powered by BEG Agriculture Vision Trading Stack.</footer>
+<div class="signal-section">
+  <div class="desk-table">📈</div>
+  <h2 class="pixel" style="font-size:10px;color:#6fe0a0;">NIFTY SIGNAL BOARD</h2>
+  <div class="signal-text none-signal" id="signalText">Loading...</div>
+  <div class="metrics" id="metricsBox"></div>
+</div>
+
+<div class="chart-wrap" id="chartWrap"></div>
+
+<div class="rooms-row">
+  <div class="room-card">
+    <div class="ricon">🖥️</div>
+    <div class="rtitle">DATA CENTER</div>
+    <div class="rdesc">Live Nifty price feed via yfinance, refreshed every run.</div>
+  </div>
+  <div class="room-card">
+    <div class="ricon">📋</div>
+    <div class="rtitle">STRATEGY ROOM</div>
+    <div class="rdesc">EMA5/EMA13 crossover + volume, 9:15-12:00 IST, 1 trade/day.</div>
+  </div>
+  <div class="room-card">
+    <div class="ricon">📰</div>
+    <div class="rtitle">NEWS DESK</div>
+    <div class="rdesc">Live headlines from Economic Times &amp; Moneycontrol RSS.</div>
+  </div>
+  <div class="room-card">
+    <div class="ricon">☕</div>
+    <div class="rtitle">RELAX ZONE</div>
+    <div class="rdesc">Agents take short coffee breaks between work cycles.</div>
+  </div>
+</div>
+
+<footer class="pixel">AUTO-REFRESHES EVERY 30S · BEG AGRICULTURE VISION TRADING STACK</footer>
 
 <script>
 const AGENTS = [
@@ -307,13 +381,24 @@ const AGENTS = [
   { key: "news", name: "NEWS AGENT", img: "assets/news_agent.png", action: "FETCHING NEWS" }
 ];
 
-let lastStatus = null;
+function updateClock() {
+  const now = new Date();
+  const istOffset = 5.5 * 60 * 60000;
+  const ist = new Date(now.getTime() + now.getTimezoneOffset() * 60000 + istOffset);
+  const hh = String(ist.getHours()).padStart(2, '0');
+  const mm = String(ist.getMinutes()).padStart(2, '0');
+  document.getElementById('clockNow').innerText = hh + ':' + mm + ' IST';
+
+  const totalMin = ist.getHours() * 60 + ist.getMinutes();
+  const marketOpen = totalMin >= 555 && totalMin <= 930;
+  document.getElementById('marketStatus').innerText = marketOpen ? "MARKET OPEN" : "MARKET CLOSED";
+  document.getElementById('marketStatus').style.color = marketOpen ? "#2ecc71" : "#e74c3c";
+}
 
 async function loadStatus() {
   try {
     const res = await fetch('status.json?t=' + Date.now());
     const status = await res.json();
-    lastStatus = status;
     render(status);
   } catch (e) {
     document.getElementById('updated').innerText = "Waiting for first data...";
@@ -325,6 +410,8 @@ function render(status) {
 
   const agentState = status.agent_status || "unknown";
   const signal = status.signal || "NONE";
+  const niftyVal = status.nifty_close || status.entry || "-";
+  document.getElementById('tickerNifty').innerText = niftyVal;
 
   const pipelineEl = document.getElementById('pipeline');
   pipelineEl.innerHTML = '<div class="room-label">MAIN OFFICE - WORKFLOW</div>';
@@ -366,9 +453,6 @@ function render(status) {
     const desk = document.createElement('div');
     desk.className = "desk";
     desk.id = "desk-" + agent.key;
-    desk.dataset.action = action;
-    desk.dataset.badgeClass = badgeClass;
-    desk.dataset.badgeText = badgeText;
     desk.dataset.working = working ? "1" : "0";
     desk.innerHTML = `
       <div class="speech">${action}</div>
@@ -424,7 +508,7 @@ function render(status) {
     signalTextEl.className = "signal-text none-signal";
     metricsBox.innerHTML = "";
   } else {
-    signalTextEl.innerText = "WATCHING (" + (status.nifty_close || "-") + ")";
+    signalTextEl.innerText = "WATCHING (" + niftyVal + ")";
     signalTextEl.className = "signal-text none-signal";
     metricsBox.innerHTML = "";
   }
@@ -471,6 +555,8 @@ function sendOnCoffeeBreak() {
   }, 3000);
 }
 
+updateClock();
+setInterval(updateClock, 1000);
 loadStatus();
 setInterval(loadStatus, 30000);
 setInterval(sendOnCoffeeBreak, 12000);
