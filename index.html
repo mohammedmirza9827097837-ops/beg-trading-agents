@@ -85,9 +85,9 @@
     max-height: 90px;
     display: block;
     margin: 0 auto;
-    filter: drop-shadow(1px 2px 2px rgba(0,0,0,0.6));
+    filter: drop-shadow(1px 2px 2px rgba(0,0,0,0.8));
   }
-  .agent-spot .avatar-img.idle { opacity: 0.75; filter: grayscale(40%); }
+  .agent-spot .avatar-img.idle { filter: drop-shadow(1px 2px 2px rgba(0,0,0,0.8)) grayscale(25%); }
 
   .agent-spot .speech {
     background: #eafff0;
@@ -226,6 +226,17 @@ const AGENTS = [
 
 const COFFEE_SPOT = { left: "83%", top: "62%" };
 let frameToggle = false;
+const preloadedImages = [];
+
+function preloadAllImages() {
+  AGENTS.forEach(function(agent) {
+    [agent.stand, agent.walk2, agent.sit].forEach(function(src) {
+      const im = new Image();
+      im.src = src;
+      preloadedImages.push(im);
+    });
+  });
+}
 
 function updateClock() {
   const now = new Date();
@@ -262,7 +273,7 @@ function render(status) {
   const layer = document.getElementById('agentLayer');
   layer.innerHTML = "";
 
-  AGENTS.forEach((agent) => {
+  AGENTS.forEach(function(agent) {
     let working = true;
     let badgeClass = "status-working";
     let badgeText = "WORKING";
@@ -305,7 +316,7 @@ function render(status) {
     spot.style.transform = "translateX(-50%)";
     spot.innerHTML =
       '<div class="speech">' + action + '</div>' +
-      '<img class="avatar-img ' + (working ? '' : 'idle') + '" src="' + agent.stand + '" alt="' + agent.name + '">' +
+      '<img class="avatar-img" src="' + agent.stand + '" alt="' + agent.name + '">' +
       '<div class="status-badge ' + badgeClass + '">' + badgeText + '</div>';
     layer.appendChild(spot);
   });
@@ -374,32 +385,34 @@ function sendOnCoffeeBreak() {
   const oldTop = spot.style.top;
 
   spot.classList.add('on-break');
-  spot.style.transition = "left 1.2s ease-in-out, top 1.2s ease-in-out";
+  spot.style.transition = "left 1.5s linear, top 1.5s linear";
   badge.className = "status-badge status-break";
   badge.innerText = "COFFEE BREAK";
   speech.innerText = "GOING FOR COFFEE";
 
   let walkFrame = 0;
+  img.src = spot.dataset.walk2;
   const walkInterval = setInterval(function() {
     walkFrame++;
     img.src = (walkFrame % 2 === 0) ? spot.dataset.stand : spot.dataset.walk2;
-  }, 250);
+  }, 300);
 
   spot.style.left = COFFEE_SPOT.left;
   spot.style.top = COFFEE_SPOT.top;
 
   setTimeout(function() {
+    clearInterval(walkInterval);
     speech.innerText = "AHH REFRESHED";
     img.src = spot.dataset.sit;
-  }, 1500);
+  }, 1600);
 
   setTimeout(function() {
-    clearInterval(walkInterval);
     let backFrame = 0;
+    img.src = spot.dataset.walk2;
     const backInterval = setInterval(function() {
       backFrame++;
       img.src = (backFrame % 2 === 0) ? spot.dataset.stand : spot.dataset.walk2;
-    }, 250);
+    }, 300);
     spot.style.left = oldLeft;
     spot.style.top = oldTop;
     badge.className = oldBadgeClass;
@@ -410,10 +423,11 @@ function sendOnCoffeeBreak() {
       clearInterval(backInterval);
       img.src = spot.dataset.stand;
       spot.classList.remove('on-break');
-    }, 1200);
-  }, 4000);
+    }, 1500);
+  }, 4200);
 }
 
+preloadAllImages();
 updateClock();
 setInterval(updateClock, 1000);
 loadStatus();
