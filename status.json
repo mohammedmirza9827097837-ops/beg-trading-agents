@@ -1,9 +1,9 @@
 {
   "agent_status": "active_no_signal",
   "signal": "NONE",
-  "nifty_close": 23897.7,
-  "ema_fast": 23924.56,
-  "ema_slow": 23933.99,
+  "nifty_close": 23816.95,
+  "ema_fast": 23823.53,
+  "ema_slow": 23850.07,
   "message": "No crossover signal right now",
-  "updated_at": "2026-09-05 11:15:08 IST"
+  "updated_at": "2026-09-07 10:00:05 IST"
 }
